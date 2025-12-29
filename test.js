@@ -24,7 +24,10 @@ async function runTests() {
   }
   
   // Supabase クライアント作成
-  const sup);
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  
+  // Test 1: 接続テスト
+  console.log('Test 1: Supabase connection...');
   try {
     const { data, error } = await supabase.from('_dummy_').select('*').limit(1);
     // テーブルが存在しなくてもエラーにならない（接続は成功）
@@ -48,7 +51,12 @@ async function runTests() {
   try {
     const { data, error } = await supabase.storage.listBuckets();
     if (error) throw error;
-    console.log(`  ✅ Storage accessible. Buckets: ${data.ma // Test 3: Auth 接続テスト
+    console.log(`  ✅ Storage accessible. Buckets: ${data.map(b => b.name).join(', ') || '(none)'}\n`);
+  } catch (error) {
+    console.error(`  ❌ Storage error: ${error.message}\n`);
+  }
+  
+  // Test 3: Auth 接続テスト
   console.log('Test 3: Auth connection...');
   try {
     const { data, error } = await supabase.auth.getSession();

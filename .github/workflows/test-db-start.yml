@@ -24,10 +24,9 @@ jobs:
         with:
           node-version: '20'
       
+      # ※ version は package.json の packageManager から自動取得される
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
       
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
@@ -64,10 +63,9 @@ jobs:
         with:
           node-version: '20'
       
+      # ※ version は package.json の packageManager から自動取得される
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
       
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
