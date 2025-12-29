@@ -1,0 +1,90 @@
+# ケースC: supabase db start の検証
+# 目的: db start が start より高速か確認
+
+name: "Case C: DB Start Only"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test-db-start:
+    name: "Using supabase db start"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      
+      - name: "[TIMING] Start Supabase DB Only"
+        id: db-start
+        run: |
+          echo "start_time=$(date +%s)" >> $GITHUB_OUTPUT
+          supabase db start
+          echo "end_time=$(date +%s)" >> $GITHUB_OUTPUT
+        timeout-minuteNG] Calculate DB start time"
+        run: |
+          start=${{ steps.db-start.outputs.start_time }}
+          end=${{ steps.db-start.outputs.end_time }}
+          duration=$((end - start))
+          echo "⏱️ supabase db start took ${duration} seconds"
+          echo "## ⏱️ Timing Results (DB Only)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`supabase db start\`: **${duration} seconds**" >> $GITHUB_STEP_SUMMARY
+
+  test-full-start:
+    name: "Using supabase start (full)"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      
+      - name: "[TIMING] Start Supabase Full"
+        id: full-start
+        run: |
+          echo ime=$(date +%s)" >> $GITHUB_OUTPUT
+          supabase start
+          echo "end_time=$(date +%s)" >> $GITHUB_OUTPUT
+        timeout-minutes: 10
+      
+      - name: "[TIMING] Calculate Full start time"
+        run: |
+          start=${{ steps.full-start.outputs.start_time }}
+          end=${{ steps.full-start.outputs.end_time }}
+          duration=$((end - start))
+          echo "⏱️ supabase start took ${duration} seconds"
+          echo "## ⏱️ Timing Results (Full)" >> $GITHUB_STEP_SUMMARY
+          echo "- \`supabase start\`: **${duration} seconds**" >> $GITHUB_STEP_SUMMARY

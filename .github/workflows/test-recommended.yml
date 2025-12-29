@@ -1,0 +1,69 @@
+# ケースB: 推奨コード（pnpm v4 + timeout）
+# 目的: 修正後のコードが問題なく動作するか確認
+
+name: "Case B: Recommended (pnpm v4)"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'  # キャッシュ有効化
+      
+      # ✅ v4 を使用（推奨）
+      - name: Install pnpm (v4 - recommended)
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      
+      - name: "[TIMING] Start Supabase Local"
+        id: supabase-start
+        run: |
+          echo "start_time=$(date +%s)" >> $GITHUB_OUTPUT
+ut-minutes: 10  # ✅ タイムアウト追加
+      
+      - name: "[TIMING] Calculate Supabase start time"
+        run: |
+          start=${{ steps.supabase-start.outputs.start_time }}
+          end=${{ steps.supabase-start.outputs.end_time }}
+          duration=$((end - start))
+          echo "⏱️ supabase start took ${duration} seconds"
+          echo "## ⏱️ Timing Results" >> $GITHUB_STEP_SUMMARY
+          echo "- \`supabase start\`: **${duration} seconds**" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Reset Database
+        run: supabase db reset
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Run tests
+        run: pnpm test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNRe- name: Summary
+        run: |
+          echo "## ✅ Case B: Recommended (pnpm v4) - Completed" >> $GITHUB_STEP_SUMMARY
+          echo "- pnpm version: $(pnpm --version)" >> $GITHUB_STEP_SUMMARY
+          echo "- Node version: $(node --version)" >> $GITHUB_STEP_SUMMARY
+          echo "- Supabase CLI version: $(supabase --version)" >> $GITHUB_STEP_SUMMARY
