@@ -18,17 +18,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
+      # ✅ pnpmを先にインストール（setup-nodeのcache: 'pnpm'より前に必要）
+      - name: Install pnpm (v4 - recommended)
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'  # キャッシュ有効化
-      
-      # ✅ v4 を使用（推奨）
-      - name: Install pnpm (v4 - recommended)
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
       
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1

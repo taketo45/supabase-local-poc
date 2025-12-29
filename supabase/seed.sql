@@ -1,12 +1,6 @@
 -- POC テスト用シードデータ
 -- このファイルは supabase db reset で自動適用される
-
--- テスト用テーブル作成
-CREATE TABLE IF NOT EXISTS poc_test (
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+-- ※テーブル作成は migrations/ フォルダで行う
 
 -- テストデータ挿入
 INSERT INTO poc_test (name) VALUES 
