@@ -39,7 +39,9 @@ jobs:
         id: supabase-start
         run: |
           echo "start_time=$(date +%s)" >> $GITHUB_OUTPUT
-ut-minutes: 10  # ✅ タイムアウト追加
+          supabase start
+          echo "end_time=$(date +%s)" >> $GITHUB_OUTPUT
+        timeout-minutes: 10  # ✅ タイムアウト追加
       
       - name: "[TIMING] Calculate Supabase start time"
         run: |
@@ -61,7 +63,8 @@ ut-minutes: 10  # ✅ タイムアウト追加
         env:
           DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
           NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNRe- name: Summary
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNRe
+      - name: Summary
         run: |
           echo "## ✅ Case B: Recommended (pnpm v4) - Completed" >> $GITHUB_STEP_SUMMARY
           echo "- pnpm version: $(pnpm --version)" >> $GITHUB_STEP_SUMMARY
