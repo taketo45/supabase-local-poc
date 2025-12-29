@@ -495,7 +495,7 @@ git commit -m "feat: Add POC for GitHub Actions + Supabase Local"
 
 git commit -m "modified: feat: Add POC for GitHub Actions + Supabase Local"
 
-git commit -m "modified2: feat: Add POC for GitHub Actions + Supabase Local"
+git commit -m "modified3: test.js or Something"
 
 # プッシュ
 git push origin main
